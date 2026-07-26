@@ -3,11 +3,13 @@
 
 import { useState } from "react";
 import Button from "@/components/Button";
+import { useRouter } from "next/navigation";
 
 
 
 export default function InterviewPage(){
 
+    const router = useRouter();
 
     const [formData,setFormData] = useState({
 
@@ -60,30 +62,89 @@ export default function InterviewPage(){
 
 
 
-    function handleSubmit(e:React.FormEvent){
+    async function handleSubmit(e:React.FormEvent){
 
 
-        e.preventDefault();
+    e.preventDefault();
 
 
-        setLoading(true);
-
-
-        console.log(formData);
+    setLoading(true);
 
 
 
-        setTimeout(()=>{
+    try{
 
 
-            setLoading(false);
+        const response = await fetch(
+
+            "/api/interview",
+
+            {
+
+                method:"POST",
+
+                headers:{
+
+                    "Content-Type":"application/json"
+
+                },
 
 
-        },1000);
+                body:JSON.stringify(formData)
+
+            }
+
+        );
+
+
+
+
+
+        const data = await response.json();
+
+
+
+
+
+        if(!response.ok){
+
+            throw new Error(data.error);
+
+        }
+
+
+
+
+
+        console.log(data);
+
+
+
+        router.push(
+            `/interview/${data.interviewId}`
+        );
+
 
 
 
     }
+
+    catch(error:any){
+
+    console.log("FRONTEND ERROR:", error.message);
+
+    alert(error.message);
+
+    }
+
+    finally{
+
+        setLoading(false);
+
+    }
+
+
+}
 
 
 
