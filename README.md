@@ -23,3 +23,26 @@ Example usage:
     text="Generate Interview"
     onClick={handleGenerate}
 />
+
+# Database Utilities & Models
+
+## Overview
+
+This folder contains the database-related files used to connect our Next.js application with MongoDB and define the structure of interview data.
+
+## Included Files
+
+### `lib/mongodb.ts`
+
+This file handles the connection between our Next.js application and MongoDB database using Mongoose.
+
+Responsibilities:
+- Connects the application with MongoDB Atlas.
+- Checks whether the MongoDB connection URL exists.
+- Provides a reusable database connection function.
+- Helps API routes communicate with the database.
+
+Example:
+
+```ts
+connectDB()

@@ -1,10 +1,21 @@
-interface ButtonProps {
+"use client";
 
-    text?:string;
+
+interface ButtonProps {
 
     children?:React.ReactNode;
 
-    type?: "button" | "submit" | "reset";
+    text?:string;
+
+    type?:
+    | "button"
+    | "submit"
+    | "reset";
+
+    variant?:
+    | "primary"
+    | "secondary"
+    | "outline";
 
     disabled?:boolean;
 
@@ -14,13 +25,16 @@ interface ButtonProps {
 
 
 
-export default function Button({
 
-    text,
+export default function Button({
 
     children,
 
+    text,
+
     type="button",
+
+    variant="primary",
 
     disabled,
 
@@ -31,8 +45,31 @@ export default function Button({
 
 
 
-return(
+const styles={
 
+
+primary:
+
+"bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-600/20",
+
+
+
+secondary:
+
+"bg-slate-700 hover:bg-slate-600 text-white",
+
+
+
+outline:
+
+"border border-slate-600 hover:border-blue-500 hover:text-blue-400 text-slate-300"
+
+
+};
+
+
+
+return (
 
 <button
 
@@ -42,21 +79,21 @@ disabled={disabled}
 
 onClick={onClick}
 
-className="
-px-5
-py-2
-rounded-lg
-bg-blue-600
-text-white
-hover:bg-blue-500
-disabled:bg-gray-500
-"
+className={`
+px-5 py-2.5
+rounded-xl
+font-medium
+duration-300
+disabled:opacity-50
+disabled:cursor-not-allowed
+${styles[variant]}
+`}
 
 >
 
 
 {
-    text || children
+children || text
 }
 
 

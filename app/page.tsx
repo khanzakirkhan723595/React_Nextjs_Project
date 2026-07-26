@@ -1,76 +1,227 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
+
 import Button from "@/components/Button";
+import InterviewCard from "@/components/InterviewCard";
 
 
-export default function Home() {
+interface InterviewSession {
+
+    _id:string;
+
+    role:string;
+
+    topic:string;
+
+    experience:string;
+
+    overallScore:number;
+
+    createdAt:string;
+
+}
 
 
-    const features = [
 
-        {
-            title: "AI Question Generation",
-            description: "Generate interview questions using AI based on your role."
-        },
+export default function DashboardPage(){
 
 
-        {
-            title: "AI Feedback",
-            description: "Get feedback and suggestions to improve your answers."
-        },
+    const [interviews,setInterviews] = useState<InterviewSession[]>([]);
+
+    const [loading,setLoading] = useState(true);
 
 
-        {
-            title: "Interview History",
-            description: "Track your previous interviews and performance."
+
+    useEffect(()=>{
+
+
+        const fetchInterviews = async()=>{
+
+
+            try{
+
+
+                const res = await fetch("/api/history");
+
+
+                const data = await res.json();
+
+
+                setInterviews(
+                    data.interviews || []
+                );
+
+
+            }
+            catch(error){
+
+
+                console.log(
+                    "History Error:",
+                    error
+                );
+
+
+            }
+            finally{
+
+
+                setLoading(false);
+
+
+            }
+
+
         }
 
-    ];
+
+
+        fetchInterviews();
+
+
+
+    },[]);
+
+
 
 
 
     return (
 
-        <main className="p-8">
+        <main
+        className="
+        min-h-screen
+        max-w-7xl
+        mx-auto
+        px-4
+        sm:px-6
+        lg:px-8
+        py-12
+        "
+        >
 
 
-            {/* Hero Section */}
-
-            <section className="text-center">
 
 
-                <h1 className="text-4xl font-bold text-white">
+            {/* Welcome Section */}
 
-                    AI Interview Platform
+
+            <section
+            className="
+            flex
+            flex-col
+            items-center
+            text-center
+            space-y-5
+            mb-16
+            "
+            >
+
+
+
+                <h1
+                className="
+                text-4xl
+                sm:text-5xl
+                font-bold
+                tracking-tight
+                "
+                >
+
+                    Welcome Developer 👋
 
                 </h1>
 
 
-                <p className="mt-4 text-gray-400">
 
-                    Practice technical interviews with AI and improve your skills.
+
+                <p
+                className="
+                text-slate-400
+                text-lg
+                max-w-xl
+                "
+                >
+
+                    Track your interview preparation,
+                    improve your answers and prepare
+                    better with AI feedback.
 
                 </p>
 
 
 
-                <div className="mt-6 flex justify-center gap-4">
+
+                <Link href="/interview">
 
 
-                    <Link href="/interview">
+                    <Button>
 
-                        <Button
-                            text="Start Interview"
-                        />
+                        Start New Interview 🚀
 
-                    </Link>
+                    </Button>
 
 
+                </Link>
 
-                    <Link href="/dashboard">
 
-                        <Button
-                            text="Dashboard"
-                        />
+
+            </section>
+
+
+
+
+
+
+
+            {/* Recent Interview Section */}
+
+
+
+            <section>
+
+
+                <div
+                className="
+                flex
+                justify-between
+                items-center
+                mb-8
+                "
+                >
+
+
+
+                    <h2
+                    className="
+                    text-3xl
+                    font-bold
+                    "
+                    >
+
+                        Recent Interviews
+
+                    </h2>
+
+
+
+
+                    <Link
+
+                    href="/interview"
+
+                    className="
+                    hidden
+                    sm:block
+                    text-blue-400
+                    hover:text-blue-300
+                    "
+
+                    >
+
+                        + New Interview
 
                     </Link>
 
@@ -78,55 +229,154 @@ export default function Home() {
                 </div>
 
 
-            </section>
 
 
 
 
-            {/* Features Section */}
-
-
-            <section className="mt-16 grid md:grid-cols-3 gap-6">
 
 
                 {
-                    features.map((feature,index)=>(
+                    loading ?
 
+
+                    (
 
                         <div
-                            key={index}
-                            className="p-5 bg-slate-800 rounded-lg"
+                        className="
+                        text-center
+                        py-20
+                        text-slate-400
+                        "
+                        >
+
+                            Loading interviews...
+
+                        </div>
+
+
+                    )
+
+
+
+                    :
+
+
+                    interviews.length===0 ?
+
+
+                    (
+
+                        <div
+                        className="
+                        border
+                        border-slate-800
+                        bg-slate-900
+                        rounded-2xl
+                        p-10
+                        text-center
+                        "
                         >
 
 
-                            <h2 className="text-xl font-bold text-white">
+                            <h3
+                            className="
+                            text-xl
+                            font-semibold
+                            "
+                            >
 
-                                {feature.title}
+                                No Interviews Found
 
-                            </h2>
+                            </h3>
 
 
 
-                            <p className="mt-2 text-gray-400">
+                            <p
+                            className="
+                            text-slate-400
+                            mt-2
+                            "
+                            >
 
-                                {feature.description}
+                                Start your first AI mock interview.
 
                             </p>
+
 
 
                         </div>
 
 
-                    ))
+                    )
+
+
+
+                    :
+
+
+
+                    (
+
+                        <div
+                        className="
+                        grid
+                        grid-cols-1
+                        md:grid-cols-2
+                        lg:grid-cols-3
+                        gap-6
+                        "
+                        >
+
+
+
+                            {
+                                interviews.map((item)=>(
+
+
+                                    <InterviewCard
+
+                                    key={item._id}
+
+                                    id={item._id}
+
+                                    role={item.role}
+
+                                    topic={item.topic}
+
+                                    experience={item.experience}
+
+                                    score={item.overallScore}
+
+                                    createdAt={item.createdAt}
+
+                                    />
+
+
+                                ))
+                            }
+
+
+
+                        </div>
+
+
+                    )
+
+
                 }
 
 
+
             </section>
+
+
+
 
 
 
         </main>
 
     );
+
 
 }

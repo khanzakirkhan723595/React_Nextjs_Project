@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
+import "./globals.css";
+
 import { ClerkProvider } from "@clerk/nextjs";
 
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
-import "./globals.css";
-
 
 export const metadata: Metadata = {
-  title: "AI Mock Interview Platform",
-  description: "AI powered interview preparation platform",
+  title: "AI Interview Platform",
+  description: "Practice interviews with AI",
 };
 
 
@@ -27,23 +27,47 @@ export default function RootLayout({
 
       <html lang="en">
 
-        <body className="min-h-screen flex flex-col bg-slate-900 text-white">
+        <body
+        className="
+        min-h-screen
+        bg-gradient-to-br
+        from-slate-950
+        via-slate-900
+        to-slate-950
+        text-white
+        "
+        >
 
-          <Navbar />
+
+          <div className="flex flex-col min-h-screen">
 
 
-          <main className="flex-1">
-
-            {children}
-
-          </main>
+            <Navbar/>
 
 
-          <Footer />
+            <main
+            className="
+            flex-1
+            px-4
+            sm:px-6
+            lg:px-8
+            "
+            >
+
+              {children}
+
+            </main>
+
+
+
+            <Footer/>
+
+
+          </div>
+
 
 
         </body>
-
 
       </html>
 

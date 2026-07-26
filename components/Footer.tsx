@@ -1,28 +1,34 @@
-export default function Footer() {
-
-    return (
-
-        <footer className="bg-slate-900 text-white p-4 mt-10">
+export default function Footer(){
 
 
-            <div className="text-center">
+return(
+
+<footer
+className="
+border-t
+border-slate-800
+mt-20
+py-8
+text-center
+text-slate-400
+"
+>
 
 
-                <p>
-                    © {new Date().getFullYear()} AI Interview Platform
-                </p>
+<p>
+© 2026 AI Interview Platform
+</p>
 
 
-                <p className="text-sm text-gray-400">
-                    Powered by Gemini AI
-                </p>
+<p className="text-sm mt-2">
+Practice interviews. Improve skills. Get hired.
+</p>
 
 
-            </div>
+</footer>
 
 
-        </footer>
+)
 
-    );
 
 }
