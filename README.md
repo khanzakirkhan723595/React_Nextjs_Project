@@ -1,48 +1,64 @@
-# AI-Interview-Platform UI Components
+# AI Mock Interview Platform 🚀
 
-## Overview
+A modern, full-stack web application that allows candidate job seekers to practice interactive technical interviews with real-time AI question generation and automated performance evaluation.
 
-Reusable UI components used throughout the AI Interview Platform.
-These components help maintain a clean structure by avoiding repeated code and making the application easier to maintain.
+Built with **Next.js 15 (App Router)**, **TypeScript**, **Tailwind CSS**, **MongoDB**, and powered by the **Groq API (Llama 3.3 70B)**.
 
-## Included Components
+---
 
-### Button.tsx
+## 🌟 Key Features
 
-A reusable button component used across the application.
+* 💻 **Tailored Interview Setup:** Customize parameters including Target Role (*Frontend, Backend, Full Stack, Software Engineer*), Experience Level (*Beginner, Intermediate, Senior*), Topic, and Question Count.
+* ⚡ **AI Question Generation:** Dynamically generates relevant technical questions using high-throughput LLMs.
+* 📝 **Interactive Answer Submission:** Clean, focused interface for submitting written responses question-by-question.
+* 📊 **Automated Evaluation & Scoring:** Returns immediate scoring (out of 10) along with detailed feedback breakdown (*Strengths* and *Areas for Improvement*).
+* 📁 **History & Session Management:** Browse past interview sessions, review question-by-question scores, and delete test or unneeded sessions.
+* 🎨 **Modern Responsive UI:** Dark-mode interface designed with dynamic visual badges, hover animations, and intuitive routing.
 
-Features:
-- Accepts custom button text through props.
-- Supports click events from parent components.
-- Provides consistent styling for all buttons.
+---
 
-Example usage:
+## 🛠️ Tech Stack
 
-```tsx
-<Button 
-    text="Generate Interview"
-    onClick={handleGenerate}
-/>
+| Domain | Tech |
+| :--- | :--- |
+| **Framework** | Next.js 15 (App Router) |
+| **Language** | TypeScript |
+| **Styling** | Tailwind CSS |
+| **Database** | MongoDB (via Mongoose) |
+| **AI Integration** | Groq API (`llama-3.3-70b-versatile`) |
+| **Icons & UI** | Custom React Components & Tailwind Utilities |
 
-# Database Utilities & Models
+---
 
-## Overview
+## 📂 Project Architecture
 
-This folder contains the database-related files used to connect our Next.js application with MongoDB and define the structure of interview data.
-
-## Included Files
-
-### `lib/mongodb.ts`
-
-This file handles the connection between our Next.js application and MongoDB database using Mongoose.
-
-Responsibilities:
-- Connects the application with MongoDB Atlas.
-- Checks whether the MongoDB connection URL exists.
-- Provides a reusable database connection function.
-- Helps API routes communicate with the database.
-
-Example:
-
-```ts
-connectDB()
+```text
+ai-interview-platform/
+├── app/
+│   ├── page.tsx                  # Landing Page
+│   ├── layout.tsx                # Root Layout with persistent Shell
+│   ├── globals.css               # Global Styles & Tailwind Directives
+│   ├── dashboard/
+│   │   └── page.tsx              # User Dashboard & Analytics Overview
+│   ├── interview/
+│   │   ├── page.tsx              # Interview Configuration Form
+│   │   └── [id]/
+│   │       └── page.tsx          # Active Interactive Interview Screen
+│   ├── history/
+│   │   └── page.tsx              # Past Interview Logs & Detailed Review
+│   └── api/
+│       ├── interview/
+│       │   └── route.ts          # POST route for Question Generation
+│       └── history/
+│           └── route.ts          # GET (all) and DELETE (single) history API
+├── components/
+│   ├── Navbar.tsx                # Sticky Navigation Header
+│   ├── Footer.tsx                # Persistent Footer
+│   ├── Button.tsx                # Reusable Variant Button Component
+│   └── InterviewCard.tsx         # Card UI for Dashboard and History Lists
+├── lib/
+│   ├── mongodb.ts                # Cached MongoDB Connection Utility
+│   └── ai.ts                     # Groq LLM Client & Prompting Helpers
+├── models/
+│   └── Interview.ts              # Mongoose Database Schema
+└── public/                       # Static Assets
