@@ -1,768 +1,158 @@
 "use client";
 
-
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
-import Button from "@/components/Button";
-
-
-
-interface Interview {
-
-
-    _id:string;
-
-    role:string;
-
-    topic:string;
-
-    experience:string;
-
-    overallScore:number;
-
-    createdAt:string;
-
-
+interface InterviewData {
+  _id: string;
+  role: string;
+  topic: string;
+  experience: string;
+  overallScore: number;
+  createdAt: string;
 }
 
-
-
-
-export default function DashboardPage(){
-
-
-
-const [interviews,setInterviews] = useState<Interview[]>([]);
-
-const [loading,setLoading] = useState(true);
-
-
-
-
-
-useEffect(()=>{
-
-
-const fetchInterviews = async()=>{
-
-
-try{
-
-
-const response = await fetch("/api/history");
-
-
-const data = await response.json();
-
-
-
-setInterviews(
-    data.interviews || []
-);
-
-
-
-}
-catch(error){
-
-
-console.log(
-    "Dashboard Error:",
-    error
-);
-
-
-}
-
-finally{
-
-
-setLoading(false);
-
-
-}
-
-
-
-}
-
-
-
-fetchInterviews();
-
-
-
-},[]);
-
-
-
-
-
-
-// Statistics
-
-
-const totalInterviews = interviews.length;
-
-
-
-const averageScore = totalInterviews > 0
-
-?
-
-(
-interviews.reduce(
-(sum,item)=>sum+item.overallScore,
-0
-)
-/ totalInterviews
-).toFixed(1)
-
-:
-
-"0";
-
-
-
-
-const bestScore = totalInterviews > 0
-
-?
-
-Math.max(
-    ...interviews.map(
-        item=>item.overallScore
-    )
-)
-
-:
-
-0;
-
-
-
-
-
-return(
-
-
-
-<main
-
-className="
-min-h-screen
-max-w-7xl
-mx-auto
-px-4
-sm:px-6
-lg:px-8
-py-12
-"
-
-
-
->
-
-
-
-{/* Hero Section */}
-
-
-
-<section
-
-className="
-text-center
-space-y-5
-mb-16
-"
-
-
->
-
-
-<h1
-
-className="
-text-4xl
-sm:text-5xl
-font-bold
-text-white
-"
-
->
-
-Welcome Developer 👋
-
-</h1>
-
-
-
-<p
-
-className="
-text-slate-400
-text-lg
-"
-
->
-
-Prepare for technical interviews with AI powered feedback and evaluation.
-
-</p>
-
-
-
-<Link
-
-href="/interview"
-
-className="
-inline-block
-mt-5
-"
-
-
->
-
-
-<Button>
-
-Start New Interview 🚀
-
-</Button>
-
-
-
-</Link>
-
-
-
-</section>
-
-
-
-
-
-
-
-{/* Statistics Cards */}
-
-
-
-<section
-
-className="
-grid
-grid-cols-1
-sm:grid-cols-2
-lg:grid-cols-3
-gap-6
-mb-16
-"
-
-
-
->
-
-
-
-{/* Card 1 */}
-
-
-
-<div
-
-className="
-bg-slate-900
-border
-border-slate-800
-rounded-2xl
-p-6
-hover:border-blue-500
-transition
-"
-
-
-
->
-
-
-<p className="text-slate-400">
-
-Total Interviews
-
-</p>
-
-
-<h2
-
-className="
-text-4xl
-font-bold
-text-white
-mt-3
-"
-
->
-
-{totalInterviews}
-
-</h2>
-
-
-
-<p className="text-sm text-slate-500 mt-2">
-
-Completed Sessions
-
-</p>
-
-
-
-</div>
-
-
-
-
-
-
-
-{/* Card 2 */}
-
-
-
-<div
-
-className="
-bg-slate-900
-border
-border-slate-800
-rounded-2xl
-p-6
-hover:border-green-500
-transition
-"
-
-
->
-
-
-<p className="text-slate-400">
-
-Average Score
-
-</p>
-
-
-
-<h2
-
-className="
-text-4xl
-font-bold
-text-green-400
-mt-3
-"
-
->
-
-
-{averageScore}/10
-
-
-</h2>
-
-
-
-<p className="text-sm text-slate-500 mt-2">
-
-Overall Performance
-
-</p>
-
-
-
-</div>
-
-
-
-
-
-
-
-{/* Card 3 */}
-
-
-
-<div
-
-className="
-bg-slate-900
-border
-border-slate-800
-rounded-2xl
-p-6
-hover:border-purple-500
-transition
-"
-
-
->
-
-
-<p className="text-slate-400">
-
-Best Score
-
-</p>
-
-
-
-<h2
-
-className="
-text-4xl
-font-bold
-text-purple-400
-mt-3
-"
-
->
-
-
-{bestScore}/10
-
-
-</h2>
-
-
-
-<p className="text-sm text-slate-500 mt-2">
-
-Highest Achievement
-
-</p>
-
-
-
-</div>
-
-
-
-
-</section>
-
-
-
-
-
-
-
-{/* Recent Interviews */}
-
-
-
-<section>
-
-
-
-<div
-
-className="
-flex
-justify-between
-items-center
-mb-8
-"
-
->
-
-
-<h2
-
-className="
-text-3xl
-font-bold
-text-white
-"
-
->
-
-Recent Interviews
-
-</h2>
-
-
-
-<Link
-
-href="/history"
-
-className="
-text-blue-400
-hover:text-blue-300
-"
-
->
-
-View All →
-
-</Link>
-
-
-
-</div>
-
-
-
-
-
-
-
-{
-
-loading ?
-
-
-(
-
-<p className="text-slate-400">
-
-Loading interviews...
-
-</p>
-
-)
-
-
-
-:
-
-
-
-interviews.length===0
-
-
-?
-
-(
-
-<div
-
-className="
-border
-border-slate-800
-bg-slate-900
-rounded-xl
-p-10
-text-center
-"
-
-
->
-
-
-<p className="text-slate-400">
-
-No interviews completed yet.
-
-</p>
-
-
-<Link
-
-href="/interview"
-
-className="
-inline-block
-mt-5
-"
-
-
->
-
-
-<Button>
-
-Start Your First Interview
-
-</Button>
-
-
-</Link>
-
-
-
-</div>
-
-)
-
-
-
-:
-
-
-
-(
-
-
-<div
-
-className="
-grid
-grid-cols-1
-md:grid-cols-2
-lg:grid-cols-3
-gap-6
-"
-
-
->
-
-
-{
-
-
-interviews.slice(0,3).map((item)=>(
-
-
-
-<div
-
-key={item._id}
-
-className="
-bg-slate-900
-border
-border-slate-800
-rounded-2xl
-p-6
-hover:-translate-y-1
-hover:border-blue-500
-transition
-"
-
-
->
-
-
-
-<h3
-
-className="
-text-xl
-font-bold
-text-white
-"
-
->
-
-{item.role}
-
-</h3>
-
-
-
-<p className="text-slate-400 mt-2">
-
-Topic: {item.topic}
-
-</p>
-
-
-
-<p className="text-slate-400">
-
-Level: {item.experience}
-
-</p>
-
-
-
-<div
-
-className="
-mt-4
-flex
-justify-between
-items-center
-"
-
->
-
-
-<span
-
-className="
-text-green-400
-font-bold
-"
-
->
-
-{item.overallScore}/10
-
-</span>
-
-
-
-<Link
-
-href={`/history/${item._id}`}
-
-className="
-text-blue-400
-hover:underline
-"
-
-
->
-
-Details →
-
-</Link>
-
-
-
-</div>
-
-
-
-</div>
-
-
-
-))
-
-
-
-}
-
-
-
-</div>
-
-
-)
-
-
-
-}
-
-
-
-
-</section>
-
-
-
-
-</main>
-
-
-)
-
-
+export default function DashboardPage() {
+  const [interviews, setInterviews] = useState<InterviewData[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchDashboardData() {
+      try {
+        const res = await fetch("/api/interview/history");
+        const data = await res.json();
+        if (res.ok) {
+          setInterviews(data.interviews || data || []);
+        }
+      } catch (err) {
+        console.error("Dashboard fetch error:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchDashboardData();
+  }, []);
+
+  // Helper function to normalize any raw score or percentage to a 0-10 scale
+  const normalizeScore = (score: number) => {
+    if (typeof score !== "number" || isNaN(score)) return 0;
+    
+    // If the saved score is > 10 (e.g., 53 or 70), scale it down from 100 to 10
+    const normalized = score > 10 ? score / 10 : score;
+    
+    // Cap strictly between 0 and 10
+    return Math.min(10, Math.max(0, normalized));
+  };
+
+  // Compute Metrics
+  const totalInterviews = interviews.length;
+
+  const validScores = interviews.map((item) => normalizeScore(item.overallScore));
+
+  const averageScore =
+    totalInterviews > 0
+      ? (validScores.reduce((acc, curr) => acc + curr, 0) / totalInterviews).toFixed(1)
+      : "0.0";
+
+  const bestScore =
+    totalInterviews > 0
+      ? Math.round(Math.max(...validScores))
+      : 0;
+
+  if (loading) {
+    return (
+      <div className="flex min-h-[60vh] flex-col items-center justify-center text-white">
+        <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-3" />
+        <p className="animate-pulse text-slate-400">Loading dashboard stats...</p>
+      </div>
+    );
+  }
+
+  return (
+    <main className="max-w-6xl mx-auto px-4 py-10 text-white">
+      {/* Top CTA */}
+      <div className="flex justify-center mb-10">
+        <Link
+          href="/interview"
+          className="bg-blue-600 hover:bg-blue-500 text-white font-semibold px-6 py-3 rounded-xl transition shadow-lg shadow-blue-500/20"
+        >
+          Start New Interview 🚀
+        </Link>
+      </div>
+
+      {/* Metrics Cards */}
+      <div className="grid md:grid-cols-3 gap-6 mb-12">
+        {/* Card 1: Total Interviews */}
+        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+          <p className="text-slate-400 text-xs font-semibold uppercase tracking-wider mb-2">
+            Total Interviews
+          </p>
+          <p className="text-4xl font-extrabold text-white">{totalInterviews}</p>
+          <p className="text-slate-500 text-xs mt-2">Completed Sessions</p>
+        </div>
+
+        {/* Card 2: Average Score */}
+        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+          <p className="text-slate-400 text-xs font-semibold uppercase tracking-wider mb-2">
+            Average Score
+          </p>
+          <p className="text-4xl font-extrabold text-green-400">
+            {averageScore}
+            <span className="text-lg text-slate-500 font-normal">/10</span>
+          </p>
+          <p className="text-slate-500 text-xs mt-2">Overall Performance</p>
+        </div>
+
+        {/* Card 3: Best Score */}
+        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+          <p className="text-slate-400 text-xs font-semibold uppercase tracking-wider mb-2">
+            Best Score
+          </p>
+          <p className="text-4xl font-extrabold text-purple-400">
+            {bestScore}
+            <span className="text-lg text-slate-500 font-normal">/10</span>
+          </p>
+          <p className="text-slate-500 text-xs mt-2">Highest Achievement</p>
+        </div>
+      </div>
+
+      {/* Recent Interviews */}
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-xl font-bold text-slate-100">Recent Interviews</h2>
+        <Link href="/history" className="text-xs text-slate-400 hover:text-white transition">
+          View All →
+        </Link>
+      </div>
+
+      <div className="grid md:grid-cols-3 gap-6">
+        {interviews.slice(0, 3).map((item) => {
+          const cardScore = Math.round(normalizeScore(item.overallScore));
+
+          return (
+            <div
+              key={item._id}
+              className="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between"
+            >
+              <div>
+                <h3 className="font-bold text-white capitalize">{item.role}</h3>
+                <p className="text-xs text-slate-400 mt-1">Topic: {item.topic}</p>
+                <p className="text-xs text-slate-400">Level: {item.experience}</p>
+              </div>
+
+              <div className="flex justify-between items-center mt-6 pt-4 border-t border-slate-800/80">
+                <span className="text-sm font-bold text-green-400">{cardScore}/10</span>
+                <Link
+                  href={`/interview/${item._id}/feedback`}
+                  className="text-xs text-blue-400 hover:underline font-medium"
+                >
+                  Details →
+                </Link>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </main>
+  );
 }

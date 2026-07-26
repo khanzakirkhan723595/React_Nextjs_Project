@@ -1,185 +1,64 @@
 import { NextResponse } from "next/server";
-
 import { connectDB } from "@/lib/mongodb";
-
 import Interview from "@/models/Interview";
-
 import { generateInterviewQuestions } from "@/lib/ai";
 
-
-
-export async function POST(req:Request){
-
-
-    try{
-
-
-        // Get data from frontend
-
-        const {
-            role,
-            experience,
-            topic,
-            amount
-
-        } = await req.json();
-
-
-
-
-        // Validation
-
-        if(!role || !experience || !topic || !amount){
-
-            return NextResponse.json(
-
-                {
-                    error:"All fields are required"
-                },
-
-                {
-                    status:400
-                }
-
-            )
-
-        }
-
-
-
-
-
-        // Call AI
-
-        const questions = await generateInterviewQuestions(
-
-            role,
-
-            experience,
-
-            topic,
-
-            amount
-
-        );
-
-
-
-
-
-        // Convert questions for database
-
-
-        const formattedQuestions = questions.map(
-
-            (question:string)=>(
-
-                {
-
-                    question,
-
-                    userAnswer:"",
-
-                    score:0,
-
-                    feedback:{
-
-                        strengths:[],
-
-                        improvements:[]
-
-                    }
-
-                }
-
-            )
-
-        );
-
-
-
-
-
-        // Connect MongoDB
-
-        await connectDB();
-
-
-
-
-
-        // Save Interview
-
-
-        const interview = await Interview.create({
-
-            userId:"guest_user",
-
-            role,
-
-            experience,
-
-            topic,
-
-            questions:formattedQuestions,
-
-            overallScore:0
-
-        });
-
-
-
-
-
-        return NextResponse.json(
-
-            {
-
-                success:true,
-
-                interviewId:interview._id,
-
-                questions:interview.questions
-
-            },
-
-            {
-
-                status:201
-
-            }
-
-        );
-
-
-
+export async function POST(req: Request) {
+  try {
+    const { role, experience, topic, amount } = await req.json();
+
+    if (!role || !experience || !topic) {
+      return NextResponse.json(
+        { error: "Role, experience, and topic are required fields" },
+        { status: 400 }
+      );
     }
 
-    catch(error:any){
+    // Connect to database first
+    await connectDB();
 
+    // Call Groq AI to generate questions
+    const rawQuestions = await generateInterviewQuestions(
+      role,
+      experience,
+      topic,
+      amount || 5
+    );
 
-        console.log(error);
+    const formattedQuestions = rawQuestions.map((q: any) => ({
+      question: typeof q === "string" ? q : q.question,
+      userAnswer: "",
+      idealAnswer: typeof q === "object" ? q.idealAnswer || "" : "",
+      score: 0,
+      feedback: {
+        strengths: [],
+        improvements: [],
+      },
+    }));
 
+    // Create record in MongoDB
+    const interview = await Interview.create({
+      userId: "guest_user",
+      role,
+      experience,
+      topic,
+      questions: formattedQuestions,
+      overallScore: 0,
+    });
 
+    return NextResponse.json(
+      {
+        success: true,
+        interviewId: interview._id,
+      },
+      { status: 201 }
+    );
+  } catch (error: any) {
+    console.error("POST /api/interview Error:", error);
 
-        return NextResponse.json(
-
-            {
-
-                error:error.message
-
-            },
-
-            {
-
-                status:500
-
-            }
-
-        )
-
-
-    }
-
-
+    return NextResponse.json(
+      { error: error.message || "Failed to generate interview session" },
+      { status: 500 }
+    );
+  }
 }
