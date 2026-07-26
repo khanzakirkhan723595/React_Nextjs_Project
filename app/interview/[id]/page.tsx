@@ -3,20 +3,37 @@
 
 import {useState} from "react";
 
+import {useRouter} from "next/navigation";
+
 import QuestionCard from "@/components/QuestionCard";
 
 
 
-export default function InterviewSession(){
+export default function InterviewPage(){
+
+
+const router = useRouter();
+
+
+
+const id = "your_interview_id";
+
 
 
 const questions=[
 
-    "Explain React Virtual DOM",
+{
+question:"Explain React Virtual DOM"
+},
 
-    "What is useEffect in React?",
+{
+question:"Difference between useState and useEffect"
+},
 
-    "Explain Next.js App Router"
+{
+question:"What is Next.js?"
+}
+
 
 ];
 
@@ -25,25 +42,93 @@ const questions=[
 const [current,setCurrent]=useState(0);
 
 
-
-function handleAnswer(answer:string){
-
-
-    console.log("User Answer:",answer);
+const [answers,setAnswers]=useState<string[]>([]);
 
 
+const [loading,setLoading]=useState(false);
 
-    if(current < questions.length-1){
 
-        setCurrent(current+1);
 
-    }
 
-    else{
 
-        alert("Interview Completed");
+async function handleAnswerSubmit(answer:string){
 
-    }
+
+const updatedAnswers=[
+
+...answers,
+
+answer
+
+];
+
+
+setAnswers(updatedAnswers);
+
+
+
+
+if(current < questions.length-1){
+
+
+    setCurrent(current+1);
+
+
+}
+
+else{
+
+
+    setLoading(true);
+
+
+
+    const response = await fetch(
+
+        "/api/evaluate",
+
+        {
+
+
+            method:"POST",
+
+            headers:{
+
+
+                "Content-Type":"application/json"
+
+            },
+
+
+            body:JSON.stringify({
+
+                interviewId:id,
+
+                userAnswers:updatedAnswers
+
+            })
+
+
+        }
+
+    );
+
+
+
+    const data=await response.json();
+
+
+
+    console.log(data);
+
+
+
+    router.push("/history");
+
+
+
+}
+
 
 
 }
@@ -51,30 +136,25 @@ function handleAnswer(answer:string){
 
 
 
+
+
+
 return(
 
-
-<main className="p-10 max-w-3xl mx-auto">
-
-
-<h1 className="text-3xl font-bold mb-6">
-
-AI Interview
-
-</h1>
-
+<main className="p-10">
 
 
 <QuestionCard
 
-question={questions[current]}
+question={questions[current].question}
 
 currentIndex={current}
 
 totalQuestions={questions.length}
 
-onAnswerSubmit={handleAnswer}
+onAnswerSubmit={handleAnswerSubmit}
 
+isSubmitting={loading}
 
 />
 
