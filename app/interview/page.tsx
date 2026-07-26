@@ -406,21 +406,23 @@ export default function InterviewPage(){
 
 
 
-                <Button>
+                <Button
 
-                {
-                    loading ?
+                    type="submit"
 
+                    disabled={loading}
+
+                    >
+
+                    {
+                    loading
+                    ?
                     "Generating..."
-
                     :
-
                     "Generate Interview"
+                    }
 
-                }
-
-
-                </Button>
+                    </Button>
 
 
 

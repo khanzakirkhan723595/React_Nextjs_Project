@@ -1,23 +1,14 @@
 import Link from "next/link";
-import Button from "./Button";
-
 
 
 interface InterviewCardProps {
 
-
-    id: string;
-
-    role: string;
-
-    topic: string;
-
-    experience: string;
-
-    score: number;
-
-    createdAt: string;
-
+    id:string;
+    role:string;
+    topic:string;
+    experience:string;
+    score:number;
+    createdAt:string;
 
 }
 
@@ -32,93 +23,56 @@ export default function InterviewCard({
     score,
     createdAt
 
-
-}: InterviewCardProps) {
+}:InterviewCardProps){
 
 
     return (
 
-
-        <div className="
-        border
-        rounded-lg
-        p-5
-        space-y-3
-        ">
+        <div className="border rounded-lg p-5 bg-slate-900">
 
 
-            <h2 className="
-            text-xl
-            font-bold
-            ">
-
+            <h2 className="text-xl font-bold text-white">
                 {role}
-
             </h2>
 
 
+            <p className="text-gray-400">
+                Topic: {topic}
+            </p>
 
-            <p>
 
-                Topic:
-                <span className="font-medium">
-                    {" "}{topic}
-                </span>
+            <p className="text-gray-400">
+                Experience: {experience}
+            </p>
 
+
+            <p className="text-gray-400">
+                Score: {score}/10
+            </p>
+
+
+            <p className="text-gray-400">
+                Date: {new Date(createdAt).toLocaleDateString()}
             </p>
 
 
 
-            <p>
+            <Link
 
-                Level:
-                <span className="font-medium">
-                    {" "}{experience}
-                </span>
+                href={`/history?id=${id}`}
 
-            </p>
+                className="inline-block mt-4 text-blue-400 hover:underline"
 
+            >
 
-
-            <p>
-
-                Score:
-                <span className="font-medium">
-                    {" "}{score}/10
-                </span>
-
-            </p>
-
-
-
-            <p>
-
-                Date:
-                <span className="font-medium">
-                    {" "}{createdAt}
-                </span>
-
-            </p>
-
-
-
-
-            <Link href={`/history?id=${id}`}>
-
-                <Button>
-
-                    View Details
-
-                </Button>
-
+                View Details
 
             </Link>
 
 
-
         </div>
 
-
     );
+
 
 }

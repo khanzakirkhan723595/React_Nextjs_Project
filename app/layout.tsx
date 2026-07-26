@@ -1,51 +1,54 @@
+import type { Metadata } from "next";
+import { ClerkProvider } from "@clerk/nextjs";
+
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+
 import "./globals.css";
 
 
-export const metadata = {
-
-    title: "AI Interview Platform",
-
-    description: "Practice interviews using AI"
-
+export const metadata: Metadata = {
+  title: "AI Mock Interview Platform",
+  description: "AI powered interview preparation platform",
 };
 
 
 
 export default function RootLayout({
-    children
-}: {
-    children: React.ReactNode
-}) {
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
 
 
-    return (
+  return (
 
-        <html lang="en">
+    <ClerkProvider>
 
+      <html lang="en">
 
-            <body>
+        <body className="min-h-screen flex flex-col bg-slate-900 text-white">
 
-
-                <Navbar/>
-
-
-                <main>
-
-                    {children}
-
-                </main>
+          <Navbar />
 
 
-                <Footer/>
+          <main className="flex-1">
+
+            {children}
+
+          </main>
 
 
-            </body>
+          <Footer />
 
 
-        </html>
+        </body>
 
-    );
 
+      </html>
+
+
+    </ClerkProvider>
+
+  );
 }

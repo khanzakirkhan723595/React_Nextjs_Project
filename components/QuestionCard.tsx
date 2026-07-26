@@ -1,107 +1,138 @@
 "use client";
 
-import { useState } from "react";
+
+import {useState} from "react";
 import Button from "./Button";
 
 
-interface QuestionCardProps{
+interface Props{
 
-    question:string;
+question:string;
 
-    currentIndex:number;
+currentIndex:number;
 
-    totalQuestions:number;
+totalQuestions:number;
 
-    onAnswerSubmit:(answer:string)=>void;
+onAnswerSubmit:(answer:string)=>void;
+
+isSubmitting:boolean;
 
 }
 
 
+
 export default function QuestionCard({
 
-    question,
-    currentIndex,
-    totalQuestions,
-    onAnswerSubmit
+question,
 
-}:QuestionCardProps){
+currentIndex,
 
+totalQuestions,
 
-    const [answer,setAnswer]=useState("");
+onAnswerSubmit,
 
-
-
-    function handleSubmit(e:React.FormEvent){
-
-        e.preventDefault();
+isSubmitting=false
 
 
-        if(answer.trim()=="")
-            return;
+}:Props){
 
 
-        onAnswerSubmit(answer);
-
-
-        setAnswer("");
-
-    }
+const [answer,setAnswer]=useState("");
 
 
 
-    return(
-
-        <div className="border rounded-lg p-6 space-y-5">
+function handleSubmit(e:React.FormEvent){
 
 
-            <h2 className="text-lg font-bold">
+e.preventDefault();
 
-                Question {currentIndex+1} / {totalQuestions}
 
-            </h2>
+if(!answer.trim())
+return;
 
 
 
-            <p className="text-xl">
-
-                {question}
-
-            </p>
+onAnswerSubmit(answer);
 
 
 
-            <form onSubmit={handleSubmit}>
-
-
-                <textarea
-
-                rows={5}
-
-                value={answer}
-
-                onChange={(e)=>setAnswer(e.target.value)}
-
-                placeholder="Write your answer..."
-
-                className="border p-3 w-full rounded"
-
-                />
+setAnswer("");
 
 
 
-                <Button type="submit">
-
-                    Next Question
-
-                </Button>
-
-
-            </form>
+}
 
 
 
-        </div>
+return(
 
-    )
+<div className="border rounded-lg p-6 space-y-5">
+
+
+<h3 className="font-bold">
+
+Question {currentIndex+1}/{totalQuestions}
+
+</h3>
+
+
+
+<h2 className="text-xl">
+
+{question}
+
+</h2>
+
+
+
+<form onSubmit={handleSubmit}>
+
+
+<textarea
+
+rows={6}
+
+value={answer}
+
+onChange={(e)=>setAnswer(e.target.value)}
+
+className="border w-full p-3 rounded"
+
+/>
+
+
+
+<Button
+
+type="submit"
+
+disabled={isSubmitting}
+
+>
+
+
+{
+isSubmitting?
+"Saving..."
+:
+currentIndex+1===totalQuestions?
+"Submit"
+:
+"Next"
+}
+
+
+
+</Button>
+
+
+
+</form>
+
+
+</div>
+
+
+)
 
 }

@@ -55,6 +55,8 @@ export async function POST(req:Request){
 
             role,
 
+            experience,
+
             topic,
 
             amount
